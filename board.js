@@ -20,22 +20,22 @@ const styles = StyleSheet.create({
     },
     buttonRed: {
         backgroundColor: 'rgb(255, 127, 127)',
-        height: 15,
-        width: 15,
+        height: 20,
+        width: 20,
         justifyContent: 'center',
         alignItems: 'center',
     },
     buttonGreen: {
         backgroundColor: 'rgb(127, 255, 127)',
-        height: 15,
-        width: 15,
+        height: 20,
+        width: 20,
         justifyContent: 'center',
         alignItems: 'center',
     },
     buttonBlue: {
         backgroundColor: 'rgb(127, 127, 255)',
-        height: 15,
-        width: 15,
+        height: 20,
+        width: 20,
         justifyContent: 'center',
         alignItems: 'center',
     },
@@ -56,7 +56,7 @@ const m2 = [
 const m3 = [
     ['U', 'I', 'O'],
     ['J', 'K', 'L'],
-    ['M', 'P', ' '],
+    ['M', 'P', '_'],
 ];
 
 export default class Board extends Component {
@@ -92,8 +92,9 @@ export default class Board extends Component {
     componentWillMount() {
         this._panResponder = PanResponder.create({
             onStartShouldSetPanResponder: (evt, gestureState) => true,
-            onPanResponderMove: (evt, gestureState) => this.updatePress(evt, gestureState),
-            onPanResponderEnd: (e, gestureState) => {this.updateText()},
+            onPanResponderMove: (e, g) => this.updatePress(e, g),
+            onPanResponderEnd: (e, g) => {this.updateText()},
+            onPanResponderStart: (e, g) => this.updatePress(e, g),
         });
     }
     updateText = () => {
@@ -116,15 +117,15 @@ export default class Board extends Component {
         if (g.dy > 20) yDir = 2;
         if (g.dy < -20) yDir = 0;
         let m = m1;
-        if (g.x0 > 190) m = m3;
-        else if (g.x0 > 145) m = m2;
+        if (g.x0 > 220) m = m3;
+        else if (g.x0 > 160) m = m2;
 
         this.setState({
             x0: Math.round(g.x0),
             y0: Math.round(g.y0),
             dx: Math.round(g.dx),
             dy: Math.round(g.dy),
-            next: g.dx < -100 ? "%" : m[yDir][xDir],
+            next: g.numberActiveTouches === 2 ? "%" : m[yDir][xDir],
         });
     };
     render() {
